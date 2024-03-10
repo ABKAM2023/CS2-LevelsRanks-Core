@@ -1,4 +1,28 @@
-# [C#] [Levels Ranks] Core
+![GitHub Repo stars](https://img.shields.io/github/stars/ABKAM2023/CS2-LevelsRanks-Core?style=for-the-badge)
+![GitHub all releases](https://img.shields.io/github/downloads/ABKAM2023/CS2-LevelsRanks-Core/total?style=for-the-badge)
+
+I'm sorry for my poor English.
+# EN
+**Levels Ranks** system is based on a simple principle: players perform various actions in the game, as a result of which they either gain or lose experience points. Achieving or losing a certain amount of these points leads to receiving a corresponding rank. The number of available ranks can be configured and edited at discretion.
+
+# Installation
+1. Install [Metamod:Source](https://www.sourcemm.net/downloads.php?branch=master) and [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp)
+2. Download [C#] [Levels Ranks] Core
+3. Unpack the archive and upload it to the game server
+4. Start the server to create the necessary configuration files.
+5. Connect the plugin to the database by entering the required data into the dbconfig.json file. Ensure the accuracy of the entered data.
+
+# Commands
+- `!lvl` opens the main statistics menu
+- `!rank` - shows basic information about your progress
+
+# Variables
+- `css_lvl_reset` clears player's statistics. Usage: css_lvl_reset `<steamid64>` `<data-type>` (data-type: `exp` clears values, rank; `stats` clears kills, deaths, shoots, hits, headshots, assists, round_win, round_lose; `time` clears playtime)
+- `css_lvl_reload` reloads configuration files settings.yml, settings_ranks.yml, settings_stats.yml, lr_core.phrases.yml
+- `css_lvl_give_points` awards experience points to a player. Usage: css_lvl_give_points `<steamid64>` `<amount>`
+- `css_lvl_take_points` takes away experience points from a player. Usage: css_lvl_take_point `<steamid64>` `<amount>`
+
+# RU
 **Levels Ranks** система базируется на простом принципе: игроки совершают разнообразные действия в игре, в результате которых они либо приобретают, либо теряют очки опыта. Достижение или потеря определенного объема этих очков ведет к получению соответствующего ранга. Количество доступных рангов может быть настроено и отредактировано по усмотрению.
 
 # Установка
