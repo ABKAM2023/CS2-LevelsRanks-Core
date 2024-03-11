@@ -361,6 +361,7 @@ namespace LevelsRanksCore
         public override void Load(bool hotReload)
         {
             base.Load(hotReload);
+            CreateDbConfigIfNotExists();
             dbConfig = DatabaseConfig.ReadFromJsonFile(Path.Combine(ModuleDirectory, DbConfigFileName));
             RegisterListener<Listeners.OnClientConnected>(OnClientConnected);
             RegisterEventHandler<EventPlayerDisconnect>(OnPlayerDisconnect);
@@ -383,14 +384,10 @@ namespace LevelsRanksCore
             RegisterEventHandler<EventHostageRescued>(OnHostageRescued);
             isActiveRoundForPoints = true; 
             CreateTable();
-            CreateDbConfigIfNotExists();
             LoadRanksConfig();
             config = LoadOrCreateConfig();
             phrasesConfig = LoadPhrasesConfig();
             statsconfig = LoadStatsConfig();
-    
-            CreateDbConfigIfNotExists();
-            dbConfig = DatabaseConfig.ReadFromJsonFile(Path.Combine(ModuleDirectory, DbConfigFileName));         
             
             Capabilities.RegisterPluginCapability(_pointsManagerCapability, () => this);
         } 
