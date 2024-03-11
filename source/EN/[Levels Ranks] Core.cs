@@ -1491,7 +1491,8 @@ namespace LevelsRanksCore
                     DbUser = "YourUser",
                     DbPassword = "YourPassword",
                     DbName = "YourDatabase",
-                    DbPort = "3306" 
+                    DbPort = "3306",
+                    Name = "lvl_base"
                 };
 
                 string jsonConfig = JsonSerializer.Serialize(config, new JsonSerializerOptions { WriteIndented = true });
