@@ -14,7 +14,7 @@ I'm sorry for my poor English.
 
 # Commands
 - `!lvl` opens the main statistics menu
-- `!rank` - shows basic information about your progress
+- `!rank` shows basic information about your progress
 
 # Variables
 - `css_lvl_reset` clears player's statistics. Usage: css_lvl_reset `<steamid64>` `<data-type>` (data-type: `exp` clears values, rank; `stats` clears kills, deaths, shoots, hits, headshots, assists, round_win, round_lose; `time` clears playtime)
@@ -309,7 +309,7 @@ RankMessageFormat: "{0} - {1} experience"
 
 # Команды
 - `!lvl` открывает главное меню статистики
-- `!rank` - показывает основную информацию о вашем прогрессе
+- `!rank` показывает основную информацию о вашем прогрессе
 
 # Переменные
 - `css_lvl_reset` очищает статистику игрока. Использование: css_lvl_reset `<steamid64>` `<data-type>` (data-type: `exp` очистка values, rank; `stats` очистка kills, deaths, shoots, hits, headshots, assists, round_win, round_lose; `time` очистка playtime)
