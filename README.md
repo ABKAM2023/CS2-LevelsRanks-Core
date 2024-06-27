@@ -10,6 +10,13 @@ The plugin has 3 types of statistics:
 2. **Rating - Extended**: similar to HlstatsX. You start with an average rank and 1000 experience points. Your rank depends on your gaming skills.
 3. **Rating - Simple**: similar to RankMe. Similar to the extended rating type, but without additional bonuses and with a different experience points calculation formula.
 
+# Modules:
+[ExStats - GeoIP](https://github.com/ABKAM2023/CS2-LR-ExStats-GeoIP)
+[ExStats - Hits](https://github.com/ABKAM2023/CS2-LR-ExStats-Hits)
+[Module - NameReward](https://github.com/ABKAM2023/CS2-LR-NameReward)
+[Module - Tag](https://github.com/ABKAM2023/CS2-LR-Module-Tag)
+[Module - FakeRank](https://github.com/ABKAM2023/CS2-LR-FakeRank)
+
 ## Installation
 1. Install [Metamod:Source](https://www.sourcemm.net/downloads.php/?branch=master), [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp), [MenuManager](https://github.com/NickFox007/MenuManagerCS2/releases/) and for sounds [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager/releases/).
 2. Download [C#] [Levels Ranks] Core.
@@ -41,6 +48,13 @@ The plugin has 3 types of statistics:
 1. **Накопительный**: вы начинаете с самого низшего звания и должны накапливать очки опыта, начиная с 0. Чем больше вы играете, тем выше ваше звание.
 2. **Рейтинговый - расширенный**: аналог HlstatsX. Вы начинаете со среднего звания и 1000 очков опыта. Ваше звание зависит от ваших игровых навыков.
 3. **Рейтинговый - простой**: аналог RankMe. Похож на расширенный рейтинговый тип, но без дополнительных бонусов и с другой формулой подсчета очков опыта.
+
+# Модули:
+[ExStats - GeoIP](https://github.com/ABKAM2023/CS2-LR-ExStats-GeoIP)
+[ExStats - Hits](https://github.com/ABKAM2023/CS2-LR-ExStats-Hits)
+[Module - NameReward](https://github.com/ABKAM2023/CS2-LR-NameReward)
+[Module - Tag](https://github.com/ABKAM2023/CS2-LR-Module-Tag)
+[Module - FakeRank](https://github.com/ABKAM2023/CS2-LR-FakeRank)
 
 ## Установка
 1. Установите [Metamod:Source](https://www.sourcemm.net/downloads.php/?branch=master), [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp), [MenuManager](https://github.com/NickFox007/MenuManagerCS2/releases/) и для работы звуков [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager/releases/).
