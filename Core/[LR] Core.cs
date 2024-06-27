@@ -23,8 +23,8 @@ namespace LevelsRanks;
 [MinimumApiVersion(80)]
 public class LevelsRanks : BasePlugin
 {
-    public override string ModuleAuthor => "ABKAM";
     public override string ModuleName => "[LevelsRanks] Core";
+	public override string ModuleAuthor => "ABKAM designed by RoadSide Romeo & Wend4r";
     public override string ModuleVersion => "v1.1.0";
     public DatabaseConnection DatabaseConnection { get; set; } = null!;
     public Database Database { get; set; } = null!;
@@ -260,7 +260,6 @@ public class LevelsRanks : BasePlugin
     public void ApplyExperienceUpdateSync(User user, CCSPlayerController player, int expChange, string eventDescription,
         string colorKey)
     {
-        if (expChange == 0) return;
         if ((BlockExpDuringWarmup && IsWarmupPeriod()) || (!GiveExpOnRoundEnd && IsRoundEnded)) return;
 
 
@@ -304,11 +303,9 @@ public class LevelsRanks : BasePlugin
     public void ApplyExperienceUpdateSyncWithoutLimits(User user, CCSPlayerController player, int expChange,
         string eventDescription, char color)
     {
-        if (expChange == 0) return;
-        
         var newExp = user.Value += expChange;
         if (newExp < 0) user.Value = newExp = 0;
-        
+
         _userUpdateQueue.Enqueue(user);
 
         CheckAndUpdateRank(user);
@@ -656,28 +653,25 @@ public class LevelsRanks : BasePlugin
                 attackerUser.Headshots++;
             }
 
-            if (StatisticType != "1")
+            if (_killStreaks.TryGetValue(attackerSteamIdStr, out var streak))
             {
-                if (_killStreaks.TryGetValue(attackerSteamIdStr, out var streak))
+                streak++;
+                _killStreaks[attackerSteamIdStr] = streak;
+                if (streak >= 2)
                 {
-                    streak++;
-                    _killStreaks[attackerSteamIdStr] = streak;
-                    if (streak >= 2)
-                    {
-                        var streakName = Localizer[$"killstreak_{streak}"];
-                        var streakExp =
-                            (int)(ExperienceSettings.Experience.Special_Bonuses.TryGetValue($"lr_bonus_{streak}",
-                                out var exp)
-                                ? exp
-                                : 0);
-                        ApplyExperienceUpdateSync(attackerUser, attacker, streakExp,
-                            Localizer["killstreak_bonus", streakName], Localizer["killstreak_bonus_color"]);
-                    }
+                    var streakName = Localizer[$"killstreak_{streak}"];
+                    var streakExp =
+                        (int)(ExperienceSettings.Experience.Special_Bonuses.TryGetValue($"lr_bonus_{streak}",
+                            out var exp)
+                            ? exp
+                            : 0);
+                    ApplyExperienceUpdateSync(attackerUser, attacker, streakExp,
+                        Localizer["killstreak_bonus", streakName], Localizer["killstreak_bonus_color"]);
                 }
-                else
-                {
-                    _killStreaks[attackerSteamIdStr] = 1;
-                }
+            }
+            else
+            {
+                _killStreaks[attackerSteamIdStr] = 1;
             }
         }
     }
@@ -1158,7 +1152,7 @@ public class LevelsRanks : BasePlugin
             return;
         }
 
-        Server.NextFrame(() => { OpenTopPlayersMenu(player); });
+        Server.NextFrame(() => { ShowTopPlayersByExperience(player); });
     }
 
     private async void ShowTopPlayersByPlaytime(CCSPlayerController player)
