@@ -653,25 +653,28 @@ public class LevelsRanks : BasePlugin
                 attackerUser.Headshots++;
             }
 
-            if (_killStreaks.TryGetValue(attackerSteamIdStr, out var streak))
+            if (StatisticType != "1")
             {
-                streak++;
-                _killStreaks[attackerSteamIdStr] = streak;
-                if (streak >= 2)
+                if (_killStreaks.TryGetValue(attackerSteamIdStr, out var streak))
                 {
-                    var streakName = Localizer[$"killstreak_{streak}"];
-                    var streakExp =
-                        (int)(ExperienceSettings.Experience.Special_Bonuses.TryGetValue($"lr_bonus_{streak}",
-                            out var exp)
-                            ? exp
-                            : 0);
-                    ApplyExperienceUpdateSync(attackerUser, attacker, streakExp,
-                        Localizer["killstreak_bonus", streakName], Localizer["killstreak_bonus_color"]);
+                    streak++;
+                    _killStreaks[attackerSteamIdStr] = streak;
+                    if (streak >= 2)
+                    {
+                        var streakName = Localizer[$"killstreak_{streak}"];
+                        var streakExp =
+                            (int)(ExperienceSettings.Experience.Special_Bonuses.TryGetValue($"lr_bonus_{streak}",
+                                out var exp)
+                                ? exp
+                                : 0);
+                        ApplyExperienceUpdateSync(attackerUser, attacker, streakExp,
+                            Localizer["killstreak_bonus", streakName], Localizer["killstreak_bonus_color"]);
+                    }
                 }
-            }
-            else
-            {
-                _killStreaks[attackerSteamIdStr] = 1;
+                else
+                {
+                    _killStreaks[attackerSteamIdStr] = 1;
+                }
             }
         }
     }
@@ -1152,7 +1155,7 @@ public class LevelsRanks : BasePlugin
             return;
         }
 
-        Server.NextFrame(() => { ShowTopPlayersByExperience(player); });
+        Server.NextFrame(() => { OpenTopPlayersMenu(player); });
     }
 
     private async void ShowTopPlayersByPlaytime(CCSPlayerController player)
