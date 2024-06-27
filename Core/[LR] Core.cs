@@ -260,6 +260,8 @@ public class LevelsRanks : BasePlugin
     public void ApplyExperienceUpdateSync(User user, CCSPlayerController player, int expChange, string eventDescription,
         string colorKey)
     {
+        if (expChange == 0) return;
+        
         if ((BlockExpDuringWarmup && IsWarmupPeriod()) || (!GiveExpOnRoundEnd && IsRoundEnded)) return;
 
 
@@ -303,6 +305,8 @@ public class LevelsRanks : BasePlugin
     public void ApplyExperienceUpdateSyncWithoutLimits(User user, CCSPlayerController player, int expChange,
         string eventDescription, char color)
     {
+        if (expChange == 0) return;
+        
         var newExp = user.Value += expChange;
         if (newExp < 0) user.Value = newExp = 0;
 
@@ -569,7 +573,6 @@ public class LevelsRanks : BasePlugin
             }
         }
     }
-
     private HookResult OnPlayerDeath(EventPlayerDeath eventPlayerDeath, GameEventInfo gameEventInfo)
     {
         var attacker = eventPlayerDeath.Attacker;
@@ -591,7 +594,8 @@ public class LevelsRanks : BasePlugin
         if (!OnlineUsers.TryGetValue(attackerSteamIdStr, out var attackerUser) && attackerId != null)
             return HookResult.Continue;
 
-        if (attacker.IsBot)
+        // Проверяем настройку опыта за ботов
+        if (attacker.IsBot && !ExperienceFromBots)
         {
             if (victimUser != null)
                 ProcessPlayerDeath(victimUser, victim, null, attacker, attackerSteamIdStr, headshot, false);
@@ -628,6 +632,12 @@ public class LevelsRanks : BasePlugin
         if (victim == null || attacker == null)
         {
             Logger.LogError("Victim or attacker is null in ProcessPlayerDeath");
+            return;
+        }
+
+        // Проверяем настройку опыта за ботов
+        if (!ExperienceFromBots && (attacker.IsBot || victim.IsBot))
+        {
             return;
         }
 
