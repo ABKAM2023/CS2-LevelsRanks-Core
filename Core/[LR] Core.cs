@@ -260,6 +260,7 @@ public class LevelsRanks : BasePlugin
     public void ApplyExperienceUpdateSync(User user, CCSPlayerController player, int expChange, string eventDescription,
         string colorKey)
     {
+        if (expChange == 0) return;
         if ((BlockExpDuringWarmup && IsWarmupPeriod()) || (!GiveExpOnRoundEnd && IsRoundEnded)) return;
 
 
@@ -303,9 +304,11 @@ public class LevelsRanks : BasePlugin
     public void ApplyExperienceUpdateSyncWithoutLimits(User user, CCSPlayerController player, int expChange,
         string eventDescription, char color)
     {
+        if (expChange == 0) return;
+        
         var newExp = user.Value += expChange;
         if (newExp < 0) user.Value = newExp = 0;
-
+        
         _userUpdateQueue.Enqueue(user);
 
         CheckAndUpdateRank(user);
