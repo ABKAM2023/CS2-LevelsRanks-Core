@@ -593,37 +593,66 @@ public class LevelsRanks : BasePlugin
 
         if (!OnlineUsers.TryGetValue(attackerSteamIdStr, out var attackerUser) && attackerId != null)
             return HookResult.Continue;
+        
+        bool isSuicide = attackerSteamIdStr == victimSteamIdStr;
 
-        // Проверяем настройку опыта за ботов
-        if (attacker.IsBot && !ExperienceFromBots)
+        if (isSuicide)
         {
-            if (victimUser != null)
-                ProcessPlayerDeath(victimUser, victim, null, attacker, attackerSteamIdStr, headshot, false);
+            ProcessPlayerSuicide(victimUser!, victim);
         }
         else
         {
-            ProcessPlayerDeath(victimUser!, victim, attackerUser, attacker, attackerSteamIdStr, headshot, true);
-        }
-
-        if (assister != null && assister.AuthorizedSteamID != null)
-        {
-            var assisterId = assister.AuthorizedSteamID.SteamId64;
-            var assisterSteamIdStr = SteamIdConverter.ConvertToSteamId(assisterId);
-
-            if (OnlineUsers.TryGetValue(assisterSteamIdStr, out var assisterUser))
+            if (attacker.IsBot && !ExperienceFromBots)
             {
-                assisterUser.Assists++;
-                var assistExp = ExperienceSettings.GetExperience(StatisticType, "lr_assist");
-                ApplyExperienceUpdateSync(assisterUser, assister, (int)assistExp, Localizer["assist"],
-                    Localizer["assist_color"]);
+                if (victimUser != null)
+                    ProcessPlayerDeath(victimUser, victim, null, attacker, attackerSteamIdStr, headshot, false);
             }
             else
             {
-                Logger.LogError($"Assister user not found in OnlineUsers: {assisterSteamIdStr}");
+                ProcessPlayerDeath(victimUser!, victim, attackerUser, attacker, attackerSteamIdStr, headshot, true);
+            }
+
+            if (assister != null && assister.AuthorizedSteamID != null)
+            {
+                var assisterId = assister.AuthorizedSteamID.SteamId64;
+                var assisterSteamIdStr = SteamIdConverter.ConvertToSteamId(assisterId);
+
+                if (OnlineUsers.TryGetValue(assisterSteamIdStr, out var assisterUser))
+                {
+                    assisterUser.Assists++;
+                    var assistExp = ExperienceSettings.GetExperience(StatisticType, "lr_assist");
+                    ApplyExperienceUpdateSync(assisterUser, assister, (int)assistExp, Localizer["assist"],
+                        Localizer["assist_color"]);
+                }
+                else
+                {
+                    Logger.LogError($"Assister user not found in OnlineUsers: {assisterSteamIdStr}");
+                }
             }
         }
 
-        return HookResult.Continue; 
+        return HookResult.Continue;
+    }
+    private void ProcessPlayerSuicide(User victimUser, CCSPlayerController victim)
+    {
+        if (victim == null)
+        {
+            Logger.LogError("Victim is null in ProcessPlayerSuicide");
+            return;
+        }
+        
+        if (!ExperienceFromBots && victim.IsBot)
+        {
+            return;
+        }
+
+        if (victimUser != null)
+        {
+            victimUser.Deaths++;
+            var expVictim = ExperienceSettings.GetExperience(StatisticType, "lr_suicide");
+            expVictim = -Math.Abs(expVictim);
+            ApplyExperienceUpdateSync(victimUser, victim, (int)expVictim, Localizer["suicide"], Localizer["suicide_color"]);
+        }
     }
 
     private void ProcessPlayerDeath(User victimUser, CCSPlayerController victim, User? attackerUser,
@@ -634,8 +663,7 @@ public class LevelsRanks : BasePlugin
             Logger.LogError("Victim or attacker is null in ProcessPlayerDeath");
             return;
         }
-
-        // Проверяем настройку опыта за ботов
+        
         if (!ExperienceFromBots && (attacker.IsBot || victim.IsBot))
         {
             return;
