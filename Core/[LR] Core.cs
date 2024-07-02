@@ -1174,8 +1174,8 @@ public class LevelsRanks : BasePlugin
             menu?.AddMenuOption(ReplaceColorPlaceholders(Localizer["top_player_item", i + 1, user.Value, user.Name!]),
                 (p, option) => { });
         }
-
-        menu?.Open(player);
+        
+        Server.NextFrame(() => menu?.Open(player));
     }
 
     [ConsoleCommand("css_top", "Показать топ игроков по очкам опыта")]
