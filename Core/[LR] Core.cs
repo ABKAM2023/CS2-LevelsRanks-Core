@@ -1039,64 +1039,74 @@ public class LevelsRanks : BasePlugin
         return HookResult.Continue;
     }
 
-    [ConsoleCommand("css_rank", "Показать статистику игрока")]
-    public void HandleRankCommand(CCSPlayerController? player, CommandInfo commandInfo)
+[ConsoleCommand("css_rank", "Показать статистику игрока")]
+public void HandleRankCommand(CCSPlayerController? player, CommandInfo commandInfo)
+{
+    if (player == null)
     {
-        if (player == null)
+        Server.NextFrame(() =>
+        {
+            commandInfo.ReplyToCommand(ReplaceColorPlaceholders(Localizer["command_player_only"]));
+        });
+        return;
+    }
+
+    var searchTerm = commandInfo.ArgCount < 2 ? player.PlayerName : commandInfo.GetArg(1);
+    bool isSteamId = searchTerm.All(char.IsDigit);
+
+    Task.Run(async () =>
+    {
+        User? user = null;
+        var totalPlayers = 0;
+        var playerRank = 0;
+        double kdr = 0;
+
+        try
+        {
+            if (isSteamId)
+            {
+                var steamId = searchTerm;
+                user = await Database.GetUserFromDb(steamId);
+            }
+            else
+            {
+                user = await Database.GetUserByNameAsync(searchTerm);
+            }
+
+            if (user != null)
+            {
+                var rankAndTotalPlayers = await Database.GetPlayerRankAndTotalPlayersAsync(user.SteamId!);
+                totalPlayers = rankAndTotalPlayers.totalPlayers;
+                playerRank = rankAndTotalPlayers.playerRank;
+                kdr = user.Deaths > 0 ? (double)user.Kills / user.Deaths : user.Kills;
+            }
+
+            var message = user == null
+                ? ReplaceColorPlaceholders(Localizer["player_not_found", searchTerm])
+                : ReplaceColorPlaceholders(Localizer["player_stats", user.Name!, playerRank, totalPlayers,
+                    user.Value, user.Kills, user.Deaths, kdr]);
+
+            Server.NextFrame(() =>
+            {
+                player.PrintToChat(message);
+
+                if (ShowRankMessage && user != null)
+                    foreach (var p in Utilities.GetPlayers().Where(p => p.AuthorizedSteamID != null && p != player))
+                        p.PrintToChat(message);
+            });
+        }
+        catch (Exception ex)
         {
             Server.NextFrame(() =>
             {
-                commandInfo.ReplyToCommand(ReplaceColorPlaceholders(Localizer["command_player_only"]));
+                player.PrintToChat(
+                    ReplaceColorPlaceholders(Localizer["command_error"]));
+                Logger.LogError($"Error in HandleRankCommand: {ex}");
             });
-            return;
         }
+    });
+}
 
-        var playerName = commandInfo.ArgCount < 2 ? player.PlayerName : commandInfo.GetArg(1);
-
-        Task.Run(async () =>
-        {
-            User? user = null;
-            var totalPlayers = 0;
-            var playerRank = 0;
-            double kdr = 0;
-
-            try
-            {
-                user = await Database.GetUserByNameAsync(playerName);
-
-                if (user != null)
-                {
-                    var rankAndTotalPlayers = await Database.GetPlayerRankAndTotalPlayersAsync(user.SteamId!);
-                    totalPlayers = rankAndTotalPlayers.totalPlayers;
-                    playerRank = rankAndTotalPlayers.playerRank;
-                    kdr = user.Deaths > 0 ? (double)user.Kills / user.Deaths : user.Kills;
-                }
-
-                var message = user == null
-                    ? ReplaceColorPlaceholders(Localizer["player_not_found", playerName])
-                    : ReplaceColorPlaceholders(Localizer["player_stats", user.Name!, playerRank, totalPlayers,
-                        user.Value, user.Kills, user.Deaths, kdr]);
-
-                Server.NextFrame(() =>
-                {
-                    player.PrintToChat(message);
-
-                    if (ShowRankMessage && user != null)
-                        foreach (var p in Utilities.GetPlayers().Where(p => p.AuthorizedSteamID != null && p != player))
-                            p.PrintToChat(message);
-                });
-            }
-            catch (Exception ex)
-            {
-                Server.NextFrame(() =>
-                {
-                    player.PrintToChat(
-                        ReplaceColorPlaceholders(Localizer["command_error"]));
-                    Logger.LogError($"Error in HandleRankCommand: {ex}");
-                });
-            }
-        });
-    }
 
     [ConsoleCommand("css_lvl", "Открыть меню Levels Ranks")]
     public void OpenLevelsRanksMenu(CCSPlayerController? player, CommandInfo command)
