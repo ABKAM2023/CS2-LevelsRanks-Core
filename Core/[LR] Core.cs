@@ -25,7 +25,7 @@ public class LevelsRanks : BasePlugin
 {
     public override string ModuleName => "[LevelsRanks] Core";
 	public override string ModuleAuthor => "ABKAM designed by RoadSide Romeo & Wend4r";
-    public override string ModuleVersion => "v1.1.0";
+    public override string ModuleVersion => "v1.1.1";
     public DatabaseConnection DatabaseConnection { get; set; } = null!;
     public Database Database { get; set; } = null!;
     public string? DbConnectionString = string.Empty;
@@ -1039,73 +1039,85 @@ public class LevelsRanks : BasePlugin
         return HookResult.Continue;
     }
 
-[ConsoleCommand("css_rank", "Показать статистику игрока")]
-public void HandleRankCommand(CCSPlayerController? player, CommandInfo commandInfo)
-{
-    if (player == null)
+    [ConsoleCommand("css_rank", "Показать статистику игрока")]
+    public void HandleRankCommand(CCSPlayerController? player, CommandInfo commandInfo)
     {
-        Server.NextFrame(() =>
+        if (player == null)
         {
-            commandInfo.ReplyToCommand(ReplaceColorPlaceholders(Localizer["command_player_only"]));
+            Server.NextFrame(() =>
+            {
+                commandInfo.ReplyToCommand(ReplaceColorPlaceholders(Localizer["command_player_only"]));
+            });
+            return;
+        }
+
+        string searchTerm;
+        bool isSteamId;
+
+        // Если аргумент не передан, используем преобразованный SteamID текущего игрока
+        if (commandInfo.ArgCount < 2)
+        {
+            searchTerm = SteamIdConverter.ConvertToSteamId(player.SteamID);  // Преобразуем SteamID в формат STEAM_1:{y}:{x}
+            isSteamId = true;
+        }
+        else
+        {
+            searchTerm = commandInfo.GetArg(1);
+            // Проверяем, является ли аргумент SteamID (начинается с "STEAM_1:")
+            isSteamId = searchTerm.StartsWith("STEAM_1:");
+        }
+
+        Task.Run(async () =>
+        {
+            User? user = null;
+            var totalPlayers = 0;
+            var playerRank = 0;
+            double kdr = 0;
+
+            try
+            {
+                if (isSteamId)
+                {
+                    user = await Database.GetUserFromDb(searchTerm);
+                }
+                else
+                {
+                    user = await Database.GetUserByNameAsync(searchTerm);
+                }
+
+                if (user != null)
+                {
+                    var rankAndTotalPlayers = await Database.GetPlayerRankAndTotalPlayersAsync(user.SteamId!);
+                    totalPlayers = rankAndTotalPlayers.totalPlayers;
+                    playerRank = rankAndTotalPlayers.playerRank;
+                    kdr = user.Deaths > 0 ? (double)user.Kills / user.Deaths : user.Kills;
+                }
+
+                var message = user == null
+                    ? ReplaceColorPlaceholders(Localizer["player_not_found", searchTerm])
+                    : ReplaceColorPlaceholders(Localizer["player_stats", user.Name!, playerRank, totalPlayers,
+                        user.Value, user.Kills, user.Deaths, kdr]);
+
+                Server.NextFrame(() =>
+                {
+                    player.PrintToChat(message);
+
+                    if (ShowRankMessage && user != null)
+                        foreach (var p in Utilities.GetPlayers().Where(p => p.AuthorizedSteamID != null && p != player))
+                            p.PrintToChat(message);
+                });
+            }
+            catch (Exception ex)
+            {
+                Server.NextFrame(() =>
+                {
+                    player.PrintToChat(
+                        ReplaceColorPlaceholders(Localizer["command_error"]));
+                    Logger.LogError($"Error in HandleRankCommand: {ex}");
+                });
+            }
         });
-        return;
     }
-
-    var searchTerm = commandInfo.ArgCount < 2 ? player.PlayerName : commandInfo.GetArg(1);
-    bool isSteamId = searchTerm.All(char.IsDigit);
-
-    Task.Run(async () =>
-    {
-        User? user = null;
-        var totalPlayers = 0;
-        var playerRank = 0;
-        double kdr = 0;
-
-        try
-        {
-            if (isSteamId)
-            {
-                var steamId = searchTerm;
-                user = await Database.GetUserFromDb(steamId);
-            }
-            else
-            {
-                user = await Database.GetUserByNameAsync(searchTerm);
-            }
-
-            if (user != null)
-            {
-                var rankAndTotalPlayers = await Database.GetPlayerRankAndTotalPlayersAsync(user.SteamId!);
-                totalPlayers = rankAndTotalPlayers.totalPlayers;
-                playerRank = rankAndTotalPlayers.playerRank;
-                kdr = user.Deaths > 0 ? (double)user.Kills / user.Deaths : user.Kills;
-            }
-
-            var message = user == null
-                ? ReplaceColorPlaceholders(Localizer["player_not_found", searchTerm])
-                : ReplaceColorPlaceholders(Localizer["player_stats", user.Name!, playerRank, totalPlayers,
-                    user.Value, user.Kills, user.Deaths, kdr]);
-
-            Server.NextFrame(() =>
-            {
-                player.PrintToChat(message);
-
-                if (ShowRankMessage && user != null)
-                    foreach (var p in Utilities.GetPlayers().Where(p => p.AuthorizedSteamID != null && p != player))
-                        p.PrintToChat(message);
-            });
-        }
-        catch (Exception ex)
-        {
-            Server.NextFrame(() =>
-            {
-                player.PrintToChat(
-                    ReplaceColorPlaceholders(Localizer["command_error"]));
-                Logger.LogError($"Error in HandleRankCommand: {ex}");
-            });
-        }
-    });
-}
 
 
     [ConsoleCommand("css_lvl", "Открыть меню Levels Ranks")]
@@ -1218,7 +1230,10 @@ public void HandleRankCommand(CCSPlayerController? player, CommandInfo commandIn
                 (p, option) => { });
         }
 
-        menu?.Open(player);
+        Server.NextFrame(() =>
+        {
+            menu?.Open(player);
+        });
     }
 
     private void OpenUserStatsMenu(CCSPlayerController player, User user)
@@ -1450,6 +1465,61 @@ public void HandleRankCommand(CCSPlayerController? player, CommandInfo commandIn
         });
     }
 
+    [ConsoleCommand("css_lvl_giveexp_no_check", "Grants experience to a player by SteamID or SteamID64 without checking if they are online")]
+    public void GrantExperienceNoCheckCommand(CCSPlayerController? player, CommandInfo commandInfo)
+    {
+        if (player == null)
+        {
+            if (commandInfo.ArgCount < 3)
+            {
+                Logger.LogInformation("Usage: css_lvl_giveexp_no_check <SteamID or SteamID64> <experience>");
+                return;
+            }
+
+            var steamId = commandInfo.GetArg(1);
+            if (!int.TryParse(commandInfo.GetArg(2), out var experience))
+            {
+                Logger.LogInformation("Invalid experience value.");
+                return;
+            }
+
+            GrantExperienceNoCheck(steamId, experience);
+        }
+        else
+        {
+            player.PrintToChat(ReplaceColorPlaceholders(Localizer["command_console_only"]));
+        }
+    }
+
+    public void GrantExperienceNoCheck(string steamIdOrSteamId64, int experience)
+    {
+        var steamId = steamIdOrSteamId64;
+
+        if (ulong.TryParse(steamIdOrSteamId64, out var steamId64))
+            steamId = SteamIdConverter.ConvertToSteamId(steamId64);
+        else
+            steamId = NormalizeSteamID(steamIdOrSteamId64);
+
+        Task.Run(async () =>
+        {
+            var userFromDb = await Database.GetUserFromDb(steamId);
+            if (userFromDb != null)
+            {
+                userFromDb.Value += experience;
+                if (userFromDb.Value < 0) userFromDb.Value = 0;
+
+                CheckAndUpdateRank(userFromDb);
+
+                await Database.UpdateUsersInDb(new List<User> { userFromDb });
+
+                Logger.LogInformation($"{experience} experience to {steamIdOrSteamId64} (offline).");
+            }
+            else
+            {
+                Logger.LogWarning($"Player offline with SteamID {steamId} not found in database.");
+            }
+        });
+    }
 
     public string NormalizeSteamID(string steamId)
     {

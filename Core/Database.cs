@@ -34,8 +34,8 @@ public class Database
             await using var reader = await command.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
-                var steamId = reader.GetString("steam");
-                var rank = reader.GetInt32("rank");
+                var steamId = reader.GetString(0); // Используем индекс вместо GetOrdinal для оптимизации
+                var rank = reader.GetInt32(1);
                 ranks[steamId] = rank;
             }
         }
@@ -46,6 +46,8 @@ public class Database
 
         return ranks;
     }
+
+
 
     public async Task UpdateUsersInDbWithRetry(IEnumerable<User> users)
     {

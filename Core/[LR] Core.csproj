@@ -6,6 +6,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <!-- Зависимости -->
         <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0"/>
         <PackageReference Include="CounterStrikeSharp.API" Version="*"/>
         <PackageReference Include="Dapper" Version="2.1.24"/>

@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
 using CounterStrikeSharp.API.Modules.Utils;
@@ -84,4 +85,6 @@ public class LevelsRanksApi : ILevelsRanksApi
     {
         return _levelsRanks.GetExperienceMultiplier(steamId);
     }
+    
+    public ConcurrentDictionary<string, User> OnlineUsers => _levelsRanks.OnlineUsers;
 }
