@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using CounterStrikeSharp.API.Core;
 
 namespace LevelsRanksApi
@@ -16,6 +17,6 @@ namespace LevelsRanksApi
         void UnregisterMenuOption(string menuOptionName);
         void SetExperienceMultiplier(string steamId, double multiplier);
         double GetExperienceMultiplier(string steamId);
-        void ReloadConfigs();
+		ConcurrentDictionary<string, User> OnlineUsers { get; }
     }
 }
