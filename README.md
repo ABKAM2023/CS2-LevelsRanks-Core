@@ -19,7 +19,7 @@ The plugin has 3 types of statistics:
 - [VIP - ExperienceMultiplier](https://github.com/ABKAM2023/CS2-VIP-LR-ExperienceMultiplier/tree/v1%2C0)
 
 ## Installation
-1. Install [Metamod:Source](https://www.sourcemm.net/downloads.php/?branch=master), [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp), [MenuManager](https://github.com/NickFox007/MenuManagerCS2/releases/) and for sounds [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager/releases/).
+1. Install [Metamod:Source](https://www.sourcemm.net/downloads.php/?branch=master), [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp), [MenuManager](https://github.com/NickFox007/MenuManagerCS2/releases/), [AnyBaseLib](https://github.com/NickFox007/AnyBaseLibCS2/releases), [PlayerSettings](https://github.com/NickFox007/PlayerSettingsCS2/releases) and for sounds [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager/releases/).
 2. Download [C#] [Levels Ranks] Core.
 3. Unpack the archive and upload it to your game server.
 4. Start the server to create the necessary configuration files.
@@ -58,7 +58,7 @@ The plugin has 3 types of statistics:
 - [Module - FakeRank](https://github.com/ABKAM2023/CS2-LR-FakeRank)
 
 ## Установка
-1. Установите [Metamod:Source](https://www.sourcemm.net/downloads.php/?branch=master), [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp), [MenuManager](https://github.com/NickFox007/MenuManagerCS2/releases/) и для работы звуков [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager/releases/).
+1. Установите [Metamod:Source](https://www.sourcemm.net/downloads.php/?branch=master), [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp), [MenuManager](https://github.com/NickFox007/MenuManagerCS2/releases/), [AnyBaseLib](https://github.com/NickFox007/AnyBaseLibCS2/releases), [PlayerSettings](https://github.com/NickFox007/PlayerSettingsCS2/releases) и для работы звуков [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager/releases/).
 2. Скачайте [C#] [Levels Ranks] Core.
 3. Распакуйте архив и загрузите его на игровой сервер.
 4. Запустите сервер, чтобы создать необходимые конфигурационные файлы.
