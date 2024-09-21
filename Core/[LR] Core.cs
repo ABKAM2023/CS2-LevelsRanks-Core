@@ -25,7 +25,7 @@ public class LevelsRanks : BasePlugin
 {
     public override string ModuleName => "[LevelsRanks] Core";
 	public override string ModuleAuthor => "ABKAM designed by RoadSide Romeo & Wend4r";
-    public override string ModuleVersion => "v1.1.1";
+    public override string ModuleVersion => "v1.1.2";
     public DatabaseConnection DatabaseConnection { get; set; } = null!;
     public Database Database { get; set; } = null!;
     public string? DbConnectionString = string.Empty;
@@ -457,9 +457,18 @@ public class LevelsRanks : BasePlugin
             var disconnectTime = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
             user.Playtime += (int)(disconnectTime - user.LastConnect);
             user.LastConnect = (int)disconnectTime;
-
-
-            _userUpdateQueue.Enqueue(user);
+            
+            Task.Run(async () =>
+            {
+                try
+                {
+                    await Database.UpdateUsersInDbWithRetry(new List<User> { user });
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError($"Failed to save player data for {user.SteamId}: {ex}");
+                }
+            });
         }
 
         return HookResult.Continue;
@@ -1053,17 +1062,15 @@ public class LevelsRanks : BasePlugin
 
         string searchTerm;
         bool isSteamId;
-
-        // Если аргумент не передан, используем преобразованный SteamID текущего игрока
+        
         if (commandInfo.ArgCount < 2)
         {
-            searchTerm = SteamIdConverter.ConvertToSteamId(player.SteamID);  // Преобразуем SteamID в формат STEAM_1:{y}:{x}
+            searchTerm = SteamIdConverter.ConvertToSteamId(player.SteamID);  
             isSteamId = true;
         }
         else
         {
             searchTerm = commandInfo.GetArg(1);
-            // Проверяем, является ли аргумент SteamID (начинается с "STEAM_1:")
             isSteamId = searchTerm.StartsWith("STEAM_1:");
         }
 
