@@ -18,6 +18,7 @@ The plugin has 3 types of statistics:
 - [Module - Tag](https://github.com/ABKAM2023/CS2-LR-Module-Tag)
 - [Module - FakeRank](https://github.com/ABKAM2023/CS2-LR-FakeRank)
 - [VIP - ExperienceMultiplier](https://github.com/ABKAM2023/CS2-VIP-LR-ExperienceMultiplier/tree/v1%2C0)
+- [VIP - CustomFakeRank](https://github.com/ABKAM2023/CS2_VIP_LR_CustomFakeRank/releases)
 
 ## Installation
 1. Install [Metamod:Source](https://www.sourcemm.net/downloads.php/?branch=master), [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp), [MenuManager](https://github.com/NickFox007/MenuManagerCS2/releases/), [AnyBaseLib](https://github.com/NickFox007/AnyBaseLibCS2/releases), [PlayerSettings](https://github.com/NickFox007/PlayerSettingsCS2/releases) and for sounds [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager/releases/).
@@ -55,8 +56,11 @@ The plugin has 3 types of statistics:
 - [ExStats - GeoIP](https://github.com/ABKAM2023/CS2-LR-ExStats-GeoIP)
 - [ExStats - Hits](https://github.com/ABKAM2023/CS2-LR-ExStats-Hits)
 - [Module - NameReward](https://github.com/ABKAM2023/CS2-LR-NameReward)
+- [Module - TimeReward](https://github.com/ABKAM2023/CS2-LR-TimeReward)
 - [Module - Tag](https://github.com/ABKAM2023/CS2-LR-Module-Tag)
 - [Module - FakeRank](https://github.com/ABKAM2023/CS2-LR-FakeRank)
+- [VIP - ExperienceMultiplier](https://github.com/ABKAM2023/CS2-VIP-LR-ExperienceMultiplier/tree/v1%2C0)
+- [VIP - CustomFakeRank](https://github.com/ABKAM2023/CS2_VIP_LR_CustomFakeRank/releases)
 
 ## Установка
 1. Установите [Metamod:Source](https://www.sourcemm.net/downloads.php/?branch=master), [CounterStrikeSharp](https://github.com/roflmuffin/CounterStrikeSharp), [MenuManager](https://github.com/NickFox007/MenuManagerCS2/releases/), [AnyBaseLib](https://github.com/NickFox007/AnyBaseLibCS2/releases), [PlayerSettings](https://github.com/NickFox007/PlayerSettingsCS2/releases) и для работы звуков [MultiAddonManager](https://github.com/Source2ZE/MultiAddonManager/releases/).
