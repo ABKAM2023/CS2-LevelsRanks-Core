@@ -86,5 +86,10 @@ public class LevelsRanksApi : ILevelsRanksApi
         return _levelsRanks.GetExperienceMultiplier(steamId);
     }
     
+    public bool GetExperienceFromBots()
+    {
+        return _levelsRanks.ExperienceFromBots;
+    }  
+    
     public ConcurrentDictionary<string, User> OnlineUsers => _levelsRanks.OnlineUsers;
 }

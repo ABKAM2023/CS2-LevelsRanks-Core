@@ -25,7 +25,7 @@ public class LevelsRanks : BasePlugin
 {
     public override string ModuleName => "[LevelsRanks] Core";
 	public override string ModuleAuthor => "ABKAM designed by RoadSide Romeo & Wend4r";
-    public override string ModuleVersion => "v1.1.2";
+    public override string ModuleVersion => "v1.1.3";
     public DatabaseConnection DatabaseConnection { get; set; } = null!;
     public Database Database { get; set; } = null!;
     public string? DbConnectionString = string.Empty;
