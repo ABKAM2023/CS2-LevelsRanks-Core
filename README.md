@@ -13,6 +13,7 @@ The plugin has 3 types of statistics:
 # Modules:
 - [ExStats - GeoIP](https://github.com/ABKAM2023/CS2-LR-ExStats-GeoIP)
 - [ExStats - Hits](https://github.com/ABKAM2023/CS2-LR-ExStats-Hits)
+- [ExStats - Weapons](https://github.com/ABKAM2023/CS2-LR-ExStats-Weapons)
 - [Module - NameReward](https://github.com/ABKAM2023/CS2-LR-NameReward)
 - [Module - TimeReward](https://github.com/ABKAM2023/CS2-LR-TimeReward)
 - [Module - Tag](https://github.com/ABKAM2023/CS2-LR-Module-Tag)
