@@ -17,6 +17,7 @@ namespace LevelsRanksApi
         void UnregisterMenuOption(string menuOptionName);
         void SetExperienceMultiplier(string steamId, double multiplier);
         double GetExperienceMultiplier(string steamId);
+        bool GetExperienceFromBots();
 		ConcurrentDictionary<string, User> OnlineUsers { get; }
     }
 }
