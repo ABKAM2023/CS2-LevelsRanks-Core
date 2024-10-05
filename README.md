@@ -2,6 +2,7 @@
 ![GitHub all releases](https://img.shields.io/github/downloads/ABKAM2023/CS2-LevelsRanks-Core/total?style=for-the-badge)
 
 # EN
+## Support for the plugin is provided on the Discord server: https://discord.gg/ChYfTtrtmS. You can also suggest ideas or report any bugs there.
 ## Description
 [C#] [Levels Ranks] Core system is based on a simple principle: players perform various actions in the game, which result in either gaining or losing experience points. Achieving or losing a certain amount of these points leads to obtaining the corresponding rank. The number of available ranks can be customized and edited at discretion.
 
@@ -45,6 +46,7 @@ The plugin has 3 types of statistics:
 
 
 # RU
+## **Для удобства и лучшей организации помощи я создал специальный сервер в Discord. Вы можете присоединиться к нему по следующей ссылке: https://discord.gg/yQm8edw**
 ## Описание
 [C#] [Levels Ranks] Core система базируется на простом принципе: игроки совершают разнообразные действия в игре, в результате которых они либо приобретают, либо теряют очки опыта. Достижение или потеря определенного объема этих очков ведет к получению соответствующего ранга. Количество доступных рангов может быть настроено и отредактировано по усмотрению.
 
