@@ -25,7 +25,7 @@ public class LevelsRanks : BasePlugin
 {
     public override string ModuleName => "[LevelsRanks] Core";
 	public override string ModuleAuthor => "ABKAM designed by RoadSide Romeo & Wend4r";
-    public override string ModuleVersion => "v1.1.3";
+    public override string ModuleVersion => "v1.1.4";
     public DatabaseConnection DatabaseConnection { get; set; } = null!;
     public Database Database { get; set; } = null!;
     public string? DbConnectionString = string.Empty;
@@ -111,8 +111,18 @@ public class LevelsRanks : BasePlugin
         Task.Run(ReauthorizeOnlinePlayers);
 
         RegisterEventHandlers();
+        RegisterListener<Listeners.OnMapEnd>(() =>
+        {
+            Task.Run(async () =>
+            {
+                foreach (var user in OnlineUsers.Values)
+                {
+                    await Database.UpdateUsersInDbWithRetry(new List<User> { user });
+                }
+            });
+        });
     }
-
+    
     public override void OnAllPluginsLoaded(bool hotReload)
     {
         _api = _pluginCapability.Get();
